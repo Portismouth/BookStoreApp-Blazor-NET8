@@ -1,6 +1,10 @@
+using System.Text;
 using BookStore.API;
 using BookStore.API.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +12,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("BookStoreAppDbConnection");
 builder.Services.AddDbContext<BookStoreContext>(options => options.UseSqlServer());
+
+builder.Services.AddIdentityCore<ApiUser>()
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<BookStoreContext>();
 
 builder.Services.AddAutoMapper(typeof(MapperConfig));
 
@@ -24,11 +32,32 @@ builder.Host.UseSerilog((ctx, lc) =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(
-        "AllowAll", 
+        "AllowAll",
         b => b.AllowAnyMethod()
             .AllowAnyHeader()
             .AllowAnyOrigin()
     );
+});
+
+builder.Services.AddAuthentication(
+    options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    }
+).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero,
+        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+        ValidAudience = builder.Configuration["JwtSettings:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]))
+    };
 });
 
 var app = builder.Build();
@@ -42,6 +71,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors("AllowAll");
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
