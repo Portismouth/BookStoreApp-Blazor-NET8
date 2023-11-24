@@ -4,6 +4,7 @@ using BookStore.API.Data;
 using BookStore.API.Models.Author;
 using AutoMapper;
 using BookStore.API.Static;
+using AutoMapper.QueryableExtensions;
 
 namespace BookStore.API.Controllers;
 
@@ -31,9 +32,10 @@ public class AuthorsController : ControllerBase
     {
         try
         {
-            var authors = await _context.Authors.ToListAsync();
-            var authorDtos = _mapper.Map<IEnumerable<AuthorReadOnlyDto>>(authors);
-            return Ok(authorDtos);
+            var authorsDto = await _context.Authors
+                .ProjectTo<AuthorReadOnlyDto>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+            return Ok(authorsDto);
         }
         catch (Exception ex)
         {
