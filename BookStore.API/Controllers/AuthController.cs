@@ -33,6 +33,8 @@ public class AuthController : ControllerBase
 
     [HttpPost]
     [Route("register")]
+    [ProducesResponseType(StatusCodes.Status202Accepted)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Register(UserDto userDto)
     {
         _logger.LogInformation($"Registration attempt for {userDto.Email}");

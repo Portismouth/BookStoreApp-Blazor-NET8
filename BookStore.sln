@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.API", "BookStore.API\BookStore.API.csproj", "{F63BFEA6-00A7-4D67-AAA2-B3745D6F0331}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.Blazor.Server.UI", "BookStore.Blazor.Server.UI\BookStore.Blazor.Server.UI.csproj", "{D852278A-EA96-44C8-8EB8-16CDCD4581E9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{F63BFEA6-00A7-4D67-AAA2-B3745D6F0331}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F63BFEA6-00A7-4D67-AAA2-B3745D6F0331}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F63BFEA6-00A7-4D67-AAA2-B3745D6F0331}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D852278A-EA96-44C8-8EB8-16CDCD4581E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D852278A-EA96-44C8-8EB8-16CDCD4581E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D852278A-EA96-44C8-8EB8-16CDCD4581E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D852278A-EA96-44C8-8EB8-16CDCD4581E9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
