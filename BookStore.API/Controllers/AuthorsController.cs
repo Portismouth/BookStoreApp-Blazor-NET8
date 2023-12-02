@@ -48,11 +48,17 @@ public class AuthorsController : ControllerBase
 
     // GET: api/Authors/5
     [HttpGet("{id}")]
-    public async Task<ActionResult<AuthorReadOnlyDto>> GetAuthor(int id)
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<AuthorDetailsDto>> GetAuthor(int id)
     {
         try
         {
-            var author = await _context.Authors.FindAsync(id);
+            var author = await _context.Authors
+                .Include(auth => auth.Books)
+                .ProjectTo<AuthorDetailsDto>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync(auth => auth.Id == id);
 
             if (author == null)
             {
@@ -60,8 +66,7 @@ public class AuthorsController : ControllerBase
                 return NotFound();
             }
 
-            var authorDto = _mapper.Map<AuthorReadOnlyDto>(author);
-            return Ok(authorDto);
+            return Ok(author);
         }
         catch (Exception ex)
         {
@@ -74,6 +79,9 @@ public class AuthorsController : ControllerBase
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id}")]
     [Authorize(Roles = "Administrator")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> PutAuthor(int id, AuthorUpdateDto authorDto)
     {
         if (id != authorDto.Id)
@@ -117,6 +125,8 @@ public class AuthorsController : ControllerBase
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
     [Authorize(Roles = "Administrator")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<AuthorCreateDto>> PostAuthor(AuthorCreateDto authorDto)
     {
         try
@@ -138,6 +148,9 @@ public class AuthorsController : ControllerBase
     // DELETE: api/Authors/5
     [HttpDelete("{id}")]
     [Authorize(Roles = "Administrator")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DeleteAuthor(int id)
     {
         try
