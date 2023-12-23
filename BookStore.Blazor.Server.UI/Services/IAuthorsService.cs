@@ -10,5 +10,4 @@ public interface IAuthorsService
     Task<Response<int>> Create(AuthorCreateDto author);
     Task<Response<int>> Edit(int id, AuthorUpdateDto author);
     Task<Response<int>> Delete(int id);
-
 }

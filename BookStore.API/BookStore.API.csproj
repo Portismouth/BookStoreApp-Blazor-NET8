@@ -31,6 +31,8 @@
 
   <ItemGroup>
     <Folder Include="Configurations/" />
+    <Folder Include="wwwroot/" />
+    <Folder Include="wwwroot/bookcoverimages/" />
   </ItemGroup>
 
 </Project>
